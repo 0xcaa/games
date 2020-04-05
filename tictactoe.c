@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SIZE 3
-#define SIZE_B 4
+#define SIZE 4
 
 int printboard(char board[SIZE][SIZE]);
 int getinput(int *i, int *j);
 int usage(void);
+//int ai(char board[SIZE][SIZE], int *a, int *b);
 
 int main(void)
 {
@@ -14,30 +14,49 @@ int main(void)
                                {'_','_','_'},
                                {'_','_','_'} };
 
-    int i, j;
-    char *bp = &board[0][0];
+    int i=0, j=0, a=0, b=0;
+    //char *bp = &board[0][0];
 
-    //board[0][0] = 'o';
+    //board[i][j] j controlls x i controlls y
+    
+    //board[2][2] = 'o';
     //board[1][0] = 'x';
-
+    
     usage(); 
-    getinput(&i, &j);
-    printf("%d %d", i, j);
+    printboard(board);
+
+    while(1){//while loop should check if there is 3 in a row
+        getinput(&i, &j);
+        board[j][i] = 'o';
+        //ai(board, &a, &b);
+        //ai will look at the board and send put the move in a and b
+        //board[a][b] = 'x';
+        printboard(board);
+
+
+    }
 
     return 0;
 }
 
+//int ai(char board[SIZE][SIZE], int *a, int *b)
+//{
+//ai needs to iterate over the board to get to players positions
+//
+//}
+
+
+
 int getinput(int *i, int *j)
 {
-    //int i, j;
-    printf("type: ");
+    printf("Your move: ");
     scanf("%d", i);
     scanf("%d", j);
 
 
     if(*i<0||*i>2)
         usage();
-    if(*j<0||*j>2)
+    else if(*j<0||*j>2)
         usage();
 
     return 0;
@@ -45,19 +64,13 @@ int getinput(int *i, int *j)
 
 int usage(void)
 {
-    int i, j;
+    printf("\nFirst number controls the x axis\nSecound number control the y axis\n");
+    char board[SIZE][SIZE] = { {'x','0','1','2'},
+                               {'0','_','_','_'},
+                               {'1','_','_','_'},
+                               {'2','_','_','_'} };
 
-    printf("first number controls the x axis\nsecound number control the y axis\n");
-    char board[SIZE_B][SIZE_B] = { {'x','0','1','2'},
-                                   {'0','_','_','_'},
-                                   {'1','_','_','_'},
-                                   {'2','_','_','_'} };
-    for(i=0;i<SIZE_B;i++){
-        for(j=0;j<SIZE_B;j++)
-            printf("%c  ", *(*(board + i) + j));
-
-        printf("\n");
-    }
+   printboard(board);
 
     return 0;
 }
@@ -72,6 +85,7 @@ int printboard(char board[SIZE][SIZE])
 
         printf("\n");
     }
+    printf("------------------------------------\n");
 
     return 0;
 }
