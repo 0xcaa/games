@@ -4,7 +4,7 @@
 #define SIZE 25
 #define nu NULL
 
-int main(void)
+int hangman(void)
 {
     char word[SIZE] = {'\0'};
     char *wp, *tp;
@@ -12,7 +12,8 @@ int main(void)
     int i, x, z, len, count=5, kontroll = 1;
 
     printf("type the word you wan to guess max 25 chars: ");
-    fgets(word, SIZE, stdin);
+    //fgets(word, SIZE, stdin);
+    scanf("%s", word);
     for(i=0;i<strlen(word);i++)
         if(word[i]=='\n')
             word[i]='\0';

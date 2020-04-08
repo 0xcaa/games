@@ -1,12 +1,12 @@
 CC=gcc
 CFLAGS=-g -Wall -pedantic 
-OBJS=hangman.o
+OBJS=games.o hangman.o tictactoe.o
 PREFIX=/usr/local
 
-sipher: $(OBJS)
+games: $(OBJS)
 	$(CC) -o games $(OBJS)
 
-hangman.o:
+games.o: tictactoe.h hangman.h
 
 clean:
 	rm games $(OBJS)

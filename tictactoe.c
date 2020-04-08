@@ -8,7 +8,7 @@ int getinput(int *i, int *j);
 int usage(void);
 //int ai(char board[SIZE][SIZE], int *a, int *b);
 
-int main(void)
+int tictactoe(void)
 {
     char board[SIZE][SIZE] = { {'_','_','_'},
                                {'_','_','_'},
@@ -89,4 +89,3 @@ int printboard(char board[SIZE][SIZE])
 
     return 0;
 }
-
