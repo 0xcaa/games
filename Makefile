@@ -1,18 +1,20 @@
-CC=gcc
-CFLAGS=-g -Wall -pedantic 
-OBJS=games.o hangman.o tictactoe.o
-PREFIX=/usr/local
+# gcc shooter.c -lncurses -ltinfo
 
-games: $(OBJS)
-	$(CC) -o games $(OBJS)
+# Compiler and flags
+CC = gcc
+CFLAGS = -Wall -Wextra -pedantic -std=c11 -D_DEFAULT_SOURCE
+LDFLAGS = -lncurses -ltinfo
 
-games.o: tictactoe.h hangman.h
+# Target and source files
+TARGET = shooter
+SRC = shooter.c
 
+# Default rule
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
+
+# Clean up build files
 clean:
-	rm games $(OBJS)
-
-install:
-		cp games $(DESTDIR)$(PREFIX)/bin/games
-
-uninstall:	
-		rm games $(DESTDIR)$(PREFIX)/bin/games
+	rm -f $(TARGET)

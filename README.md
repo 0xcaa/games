@@ -1,3 +1,3 @@
-# Hangman
+# Games
 
-Simple hangman game where you pick your own word
+Some games
