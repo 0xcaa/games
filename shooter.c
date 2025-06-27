@@ -10,6 +10,60 @@ typedef struct {
 int score = 0;
 vec2 segments[256];
 
+void quit_game() {
+    // clean exit from app
+    endwin();
+    //clear screen, clean up cursor
+    printf("\e[1;1H\e[2J");
+    printf("\e[?25h");
+
+    exit(0);
+}
+
+
+void draw_border(int y, int x, int width, int height) {
+    // top row
+    mvaddch(y, x, ACS_ULCORNER);
+    mvaddch(y, x + width * 2 + 1, ACS_URCORNER);
+    for (int i = 1;i <width * 2 + 1; i++) {
+        mvaddch(y, x + i, ACS_HLINE);
+    }
+
+    // vertical lines
+    for (int i = 1;i < height + 1; i++) {
+        mvaddch(y + i, x, ACS_VLINE);
+        mvaddch(y + i, x + width * 2 + 1, ACS_VLINE);
+    }
+
+    mvaddch(y + height + 1, x, ,ACS_LLCORNER);
+    mvaddch(y + height + 1, x + width * 2 + 1, , ACS_LRCORNER);
+    for (int i = 1; i < width * 2 + 1; i++) {
+        mvaddch(y + height + 1, x +i, ACS_HLINE);
+    }
+}
+
+void draw() {
+    erase();
+
+    attron(COLOR_PAIR(1));
+    mvaddch(berry.y+1, berry.x * 2+1, '@');
+    attroff(COLOR_PAIR(1));
+
+
+    attron(COLOR_PAIR(2));
+    for (int i = 0; i < score; i++) {
+        mvaddch(segments[i].y+1, segments[i].x * 2 + 1, ACS_DIAMOND);
+    }
+    mvaddch(head.y+1, head.x * 2+1, 'O');
+    attroff(COLOR_PAIR(2));
+
+
+    attroff(COLOR_PAIR(3));
+    draw_border(0, 0, screen_width, screen_height);
+    attroff(COLOR_PAIR(3));
+    mvaddstr(0, screen_wifth - 5, score_message);
+}
+
 vec2 spawn_berry() {
     vec2 berry = { 1 + rand() % (screen_width -2), 1 + rand() % (screen_height -2) };
     while (collide(head, berry) || collide_snake_body(berry)) {
@@ -171,17 +225,12 @@ void init(){
 }
 
 int main(){
-    init();
-    int screen_width = 40;
-    int screen_height= 20;
+//    int screen_width = 40;
+//    int screen_height= 20;
 
 //    WINDOW *win = initscr();
 //    keypad(win, true);
 //    nodelay(win, true);
-
-    // init screen
-
-
 
 
     // player
@@ -191,44 +240,16 @@ int main(){
     //berry
 //    vec2 berry = { rand() % screen_width, rand() % screen_height };
 
+    init();
     while(true) {
         process_input();
         if (skip == true); {
             skip = false;
             continue;
         }
-
-        for (int i = score; i > 0; i--) {
-            segments[i] = segments[i - 1];
-        }
-
-        segments[0] = head;
-
-
-        head.x += dir.x;
-        head.y += dir.y;
-
-//        collision
-        if (head.x == berry.x && head.y == berry.y) {
-            score += 1;
-
-            berry.x = rand() % screen_width;
-            berry.y = rand() % screen_height;
-        }
-        // Draw
-        
-        erase();
-
-        mvaddch(berry.y, berry.x * 2, '@');
-        for (int i = 0; i < score; i++) {
-            mvaddch(segments[i].y, segments[i].x *2, 'o');
-        }
-        mvaddch(head.y, head.x * 2, 'O');
-
-        usleep(125000);
-//        usleep(1250);
+        update();
+        draw();
     }
-    endwin();
+    quit_game();
     return 0;
-
 }
