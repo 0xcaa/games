@@ -22,16 +22,16 @@ vec2 head = { 0, 0 };
 
 vec2 berry;
 
-void quit_game();
+void quit_game(void);
 void draw_border(int y, int x, int width, int height);
-void draw();
-void game_over();
-void update();
+void draw(void);
+void game_over(void);
+void update(void);
 bool collide_snake_body(vec2 point);
 bool collide(vec2 a, vec2 b);
-void restart_game();
-void process_input();
-void init();
+void restart_game(void);
+void process_input(void);
+void init(void);
 
 
 #endif

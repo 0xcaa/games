@@ -6,7 +6,7 @@
 #include "shooter.h"
 
 
-void quit_game() {
+void quit_game(void) {
     // clean exit from app
     endwin();
     //clear screen, clean up cursor
@@ -38,7 +38,7 @@ void draw_border(int y, int x, int width, int height) {
     }
 }
 
-void draw() {
+void draw(void) {
     erase();
 
     attron(COLOR_PAIR(1));
@@ -60,7 +60,7 @@ void draw() {
     mvaddstr(0, screen_width - 5, score_message);
 }
 
-vec2 spawn_berry() {
+vec2 spawn_berry(void) {
     vec2 berry = { 1 + rand() % (screen_width -2), 1 + rand() % (screen_height -2) };
     while (collide(head, berry) || collide_snake_body(berry)) {
         berry.x = 1 + rand() % (screen_width -2);
@@ -69,7 +69,7 @@ vec2 spawn_berry() {
     return berry;
 
 }
-void game_over() {
+void game_over(void) {
     while (is_running == false) {
         process_input();
 
@@ -87,7 +87,7 @@ void game_over() {
 
 }
 
-void update() {
+void update(void) {
     for (int i = score; i > 0; i--) {
         segments[i] = segments[i -1];
     }
@@ -135,7 +135,7 @@ bool collide(vec2 a, vec2 b) {
     else return false;
 }
 
-void restart_game(){
+void restart_game(void){
     head.x = 0;
     head.y = 0;
     dir.x = 1;
@@ -145,7 +145,7 @@ void restart_game(){
     is_running = true;
 }
 
-void process_input() {
+void process_input(void) {
     int pressed = getch();
  
     if (pressed == KEY_LEFT) {
@@ -192,7 +192,7 @@ void process_input() {
 
 }
 
-void init(){
+void init(void){
     srand(time(NULL));
 
     initscr();
@@ -220,7 +220,7 @@ void init(){
 
 }
 
-int main(){
+int main(void){
 //    int screen_width = 40;
 //    int screen_height= 20;
 
