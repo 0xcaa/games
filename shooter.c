@@ -1,21 +1,17 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <curses.h>
+#include <time.h>
 
-typedef struct {
-    int x;
-    int y;
-} vec2;
+#include "shooter.h"
 
-int score = 0;
-vec2 segments[256];
 
 void quit_game() {
     // clean exit from app
     endwin();
     //clear screen, clean up cursor
-    printf("\e[1;1H\e[2J");
-    printf("\e[?25h");
+    printf("\x1B[1;1H\x1B[2J");
+    printf("\x1b[?25h");
 
     exit(0);
 }
@@ -35,8 +31,8 @@ void draw_border(int y, int x, int width, int height) {
         mvaddch(y + i, x + width * 2 + 1, ACS_VLINE);
     }
 
-    mvaddch(y + height + 1, x, ,ACS_LLCORNER);
-    mvaddch(y + height + 1, x + width * 2 + 1, , ACS_LRCORNER);
+    mvaddch(y + height + 1, x, ACS_LLCORNER);
+    mvaddch(y + height + 1, x + width * 2 + 1, ACS_LRCORNER);
     for (int i = 1; i < width * 2 + 1; i++) {
         mvaddch(y + height + 1, x +i, ACS_HLINE);
     }
@@ -61,7 +57,7 @@ void draw() {
     attroff(COLOR_PAIR(3));
     draw_border(0, 0, screen_width, screen_height);
     attroff(COLOR_PAIR(3));
-    mvaddstr(0, screen_wifth - 5, score_message);
+    mvaddstr(0, screen_width - 5, score_message);
 }
 
 vec2 spawn_berry() {
@@ -83,7 +79,7 @@ void game_over() {
             "   space to restart esc to quit   ");
 
         attron(COLOR_PAIR(3));
-        draw_border(screen_height / 2 - 1, screeb_width - 17, 17,2);
+        draw_border(screen_height / 2 - 1, screen_width - 17, 17,2);
         attroff(COLOR_PAIR(3));
 
         usleep(FRAME_TIME);
@@ -168,7 +164,7 @@ void process_input() {
         dir.x = 1;
         dir.y = 0;
     }
-    if (pressed == key_up) {
+    if (pressed == KEY_UP) {
         if (dir.y == 1) {
             return;
             skip = true;
@@ -176,7 +172,7 @@ void process_input() {
         dir.x = 0;
         dir.y = -1;
     }
-    if (pressed == key_down) {
+    if (pressed == KEY_DOWN) {
         if (dir.y == -1) {
             return;
             skip = true;
@@ -243,7 +239,7 @@ int main(){
     init();
     while(true) {
         process_input();
-        if (skip == true); {
+        if (skip == true) {
             skip = false;
             continue;
         }

@@ -8,6 +8,7 @@ LDFLAGS = -lncurses -ltinfo
 # Target and source files
 TARGET = shooter
 SRC = shooter.c
+HEADERS = shooter.h
 
 # Default rule
 all: $(TARGET)

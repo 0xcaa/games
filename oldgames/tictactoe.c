@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 #define SIZE 4
 
 int printboard(char board[SIZE][SIZE]);
