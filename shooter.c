@@ -221,21 +221,6 @@ void init(void){
 }
 
 int main(void){
-//    int screen_width = 40;
-//    int screen_height= 20;
-
-//    WINDOW *win = initscr();
-//    keypad(win, true);
-//    nodelay(win, true);
-
-
-    // player
-//    vec2 head = {0, 0};
-//    vec2 dir = {1, 0};
-
-    //berry
-//    vec2 berry = { rand() % screen_width, rand() % screen_height };
-
     init();
     while(true) {
         process_input();
