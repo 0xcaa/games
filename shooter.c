@@ -5,6 +5,21 @@
 
 #include "shooter.h"
 
+// reverse snake
+
+void fire_bullet() {
+    if (bullet_loc > screen_width) {
+        bullet_loc = 0;
+        fire_on = false;
+    }
+    if (bullet.x == head.x && bullet.y == head.y) {
+        return;
+    }
+
+    bullet.x = head.x;
+    bullet.y = head.y;
+    ++bullet_loc;
+}
 
 void quit_game(void) {
     // clean exit from app
@@ -15,7 +30,6 @@ void quit_game(void) {
 
     exit(0);
 }
-
 
 void draw_border(int y, int x, int width, int height) {
     // top row
@@ -52,6 +66,12 @@ void draw(void) {
     }
     mvaddch(head.y+1, head.x * 2+1, 'O');
     attroff(COLOR_PAIR(2));
+
+    if (fire_on) {
+        attron(COLOR_PAIR(1));
+        mvaddch(bullet.y+bullet_loc, bullet.x * 2+1, 'l');
+        attroff(COLOR_PAIR(1));
+    }
 
 
     attroff(COLOR_PAIR(3));
@@ -117,6 +137,15 @@ void update(void) {
         berry = spawn_berry();
     }
 
+    fire_bullet();
+    if (fire_on) {
+        ++bullet_loc;
+    }
+    if (bullet.y > screen_height) {
+        fire_on = false;
+        bullet_loc = 0;
+    }
+
    // usleep(FRAME_TIME);
     napms(FRAME_TIME);
 }
@@ -137,9 +166,7 @@ bool collide(vec2 a, vec2 b) {
     else return false;
 }
 
-void restart_game(void){
-    head.x = 0;
-    head.y = 0;
+void restart_game(void){ head.x = 0; head.y = 0;
     dir.x = 0;
     dir.y = 0;
     score = 0;
@@ -176,6 +203,10 @@ void process_input(void) {
             }
             break;
         case 'q':       quit_game(); break;
+        case ' ':
+            fire_on = true;
+            fire_bullet();
+            break;
         default:
             dir.x = 0;
             dir.y = 0;
