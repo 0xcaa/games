@@ -82,7 +82,8 @@ void game_over(void) {
         draw_border(screen_height / 2 - 1, screen_width - 17, 17,2);
         attroff(COLOR_PAIR(3));
 
-        usleep(FRAME_TIME);
+//        usleep(FRAME_TIME);
+        napms(FRAME_TIME);
     }
 
 }
@@ -116,7 +117,8 @@ void update(void) {
         berry = spawn_berry();
     }
 
-    usleep(FRAME_TIME);
+   // usleep(FRAME_TIME);
+    napms(FRAME_TIME);
 }
 
 bool collide_snake_body(vec2 point) {
@@ -138,7 +140,7 @@ bool collide(vec2 a, vec2 b) {
 void restart_game(void){
     head.x = 0;
     head.y = 0;
-    dir.x = 1;
+    dir.x = 0;
     dir.y = 0;
     score = 0;
     sprintf(score_message, "[ Score: %d ]", score);
@@ -147,39 +149,42 @@ void restart_game(void){
 
 void process_input(void) {
     int pressed = getch();
- 
-    if (pressed == KEY_LEFT) {
-        if (dir.x == 1) {
-            return;
-            skip = true;
-        }
-        dir.x = -1;
-        dir.y = 0;
+
+    switch (pressed) {
+        case KEY_LEFT:
+            if (dir.x != 1) {
+                dir.x = -1;
+                dir.y = 0;
+            }
+            break;
+        case KEY_RIGHT:
+            if (dir.x != -1) {
+                dir.x = 1;
+                dir.y = 0;
+            }
+            break;
+        case KEY_UP:
+            if (dir.y != 1) {
+                dir.x = 0;
+                dir.y = -1;
+            }
+            break;
+        case KEY_DOWN:
+            if (dir.y != -1) {
+                dir.x = 0;
+                dir.y = 1;
+            }
+            break;
+        case 'q':       quit_game(); break;
+        default:
+            dir.x = 0;
+            dir.y = 0;
+            break;
     }
-    if (pressed == KEY_RIGHT) {
-        if (dir.x == -1) {
-            return;
-            skip = true;
-        }
-        dir.x = 1;
-        dir.y = 0;
-    }
-    if (pressed == KEY_UP) {
-        if (dir.y == 1) {
-            return;
-            skip = true;
-        }
-        dir.x = 0;
-        dir.y = -1;
-    }
-    if (pressed == KEY_DOWN) {
-        if (dir.y == -1) {
-            return;
-            skip = true;
-        }
-        dir.x = 0;
-        dir.y = 1;
-    }
+
+
+/*
+
     if (pressed == ' ') {
         if (!is_running)
             restart_game();
@@ -189,6 +194,7 @@ void process_input(void) {
         is_running = false;
         quit_game();
     }
+    */
 
 }
 
@@ -222,6 +228,7 @@ void init(void){
 
 int main(void){
     init();
+    nodelay(stdscr, TRUE);
     while(true) {
         process_input();
         if (skip == true) {

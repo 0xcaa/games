@@ -2,7 +2,7 @@
 #define SHOOTER_H
 
 #define MAX_SCORE 256
-#define FRAME_TIME 110000
+#define FRAME_TIME 110
 
 typedef struct {
     int x;
@@ -12,8 +12,8 @@ typedef struct {
 int score = 0;
 bool skip = false;
 bool is_running = true;
-int screen_width = 25;
-int screen_height = 20;
+int screen_width = 45;
+int screen_height = 35;
 char score_message[16];
 
 vec2 segments[256];
