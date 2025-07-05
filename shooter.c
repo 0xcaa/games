@@ -6,20 +6,10 @@
 #include "shooter.h"
 
 // reverse snake
-
-void fire_bullet() {
-    if (bullet_loc > screen_width) {
-        bullet_loc = 0;
-        fire_on = false;
-    }
-    if (bullet.x == head.x && bullet.y == head.y) {
-        return;
-    }
-
-    bullet.x = head.x;
-    bullet.y = head.y;
-    ++bullet_loc;
-}
+bool holding_up = false;
+bool holding_down = false;
+bool holding_left = false;
+bool holding_right = false;
 
 void quit_game(void) {
     // clean exit from app
@@ -114,7 +104,7 @@ void update(void) {
     }
     segments[0] = head;
 
-// move snake
+// move head
     head.x += dir.x;
     head.y += dir.y;
 
@@ -125,7 +115,7 @@ void update(void) {
     }
 
     // eating berry
-    if (collide(head, berry)) {
+    if (collide(bullet, berry)) {
         if (score < MAX_SCORE) {
             score += 1;
             sprintf(score_message, "[ Score: %d ]", score);
@@ -136,17 +126,17 @@ void update(void) {
         }
         berry = spawn_berry();
     }
-
-    fire_bullet();
+//  bullet update
+    if (bullet_loc > screen_width) {
+        bullet_loc = 0;
+        fire_on = false;
+    }
     if (fire_on) {
         ++bullet_loc;
     }
-    if (bullet.y > screen_height) {
-        fire_on = false;
-        bullet_loc = 0;
-    }
 
-   // usleep(FRAME_TIME);
+    
+
     napms(FRAME_TIME);
 }
 
@@ -177,41 +167,67 @@ void restart_game(void){ head.x = 0; head.y = 0;
 void process_input(void) {
     int pressed = getch();
 
+    // Check all keys pressed this frame
+    while (pressed != ERR) {
+        switch (pressed) {
+            case KEY_UP:    holding_up = true; break;
+            case KEY_DOWN:  holding_down = true; break;
+            case KEY_LEFT:  holding_left = true; break;
+            case KEY_RIGHT: holding_right = true; break;
+            case 'q':       quit_game(); exit(0);
+        }
+        pressed = getch(); // read next input
+    }
+
+    // Reset direction based on which keys are held
+    dir.x = 0;
+    dir.y = 0;
+    if (holding_up)    dir.y = -1;
+    if (holding_down)  dir.y = 1;
+    if (holding_left)  dir.x = -1;
+    if (holding_right) dir.x = 1;
+
+/*
     switch (pressed) {
         case KEY_LEFT:
             if (dir.x != 1) {
                 dir.x = -1;
-                dir.y = 0;
+         //       dir.y = 0;
             }
             break;
         case KEY_RIGHT:
             if (dir.x != -1) {
                 dir.x = 1;
-                dir.y = 0;
+        //        dir.y = 0;
             }
             break;
         case KEY_UP:
             if (dir.y != 1) {
-                dir.x = 0;
+           //     dir.x = 0;
                 dir.y = -1;
             }
             break;
         case KEY_DOWN:
             if (dir.y != -1) {
-                dir.x = 0;
+          //      dir.x = 0;
                 dir.y = 1;
             }
             break;
         case 'q':       quit_game(); break;
         case ' ':
-            fire_on = true;
-            fire_bullet();
+            if (!fire_on) {
+                fire_on = true;
+                bullet.x = head.x;
+                bullet.y = head.y;
+            }
             break;
         default:
             dir.x = 0;
             dir.y = 0;
             break;
     }
+    */
+
 
 
 /*
@@ -259,7 +275,13 @@ void init(void){
 
 int main(void){
     init();
+    noecho();
+
+    cbreak();
+    keypad(stdscr, TRUE);
+
     nodelay(stdscr, TRUE);
+    curs_set(FALSE);
     while(true) {
         process_input();
         if (skip == true) {

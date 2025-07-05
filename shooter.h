@@ -2,7 +2,7 @@
 #define SHOOTER_H
 
 #define MAX_SCORE 256
-#define FRAME_TIME 110
+#define FRAME_TIME 11
 
 typedef struct {
     int x;
